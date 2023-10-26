@@ -1,0 +1,360 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Card {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  type        String?
+  cost        Int?
+  power       Int?
+  ability     String?
+  flavor      String?
+  carddefid   String  @unique
+  source      String?
+  source_slug String?
+  status      String?
+  art         String?
+  sketcher    String?
+  inker       String?
+  colorist    String?
+  releaseDate Int?
+  tags        Json
+}
+
+model Deck {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Location {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  ability     String
+  flavor      String?
+  art         String?
+  status      String
+  carddefid   String  @unique
+  source      String
+  source_slug String
+  rarity      String
+  rarity_slug String
+  difficulty  String
+  sketcher    String?
+  inker       String?
+  colorist    String?
+  tags        Json
+}
+
+model User {
+  id       String @id
+  name     String
+  email    String
+  password String
+}
+
+model Variant {
+  id               Int     @id @default(autoincrement())
+  cid              Int
+  art              String?
+  source           String?
+  source_slug      String?
+  status           String?
+  rarity           String?
+  rarity_slug      String
+  variant_order    String?
+  sketcher         String?
+  inker            String?
+  colorist         String?
+  full_description String?
+  ReleaseDate      Int?
+  tags             Json
+
+  @@index([cid])
+}
+
+model CardToDeck {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_CardToDeck_AB_unique")
+  @@index([B], map: "_CardToDeck_B_index")
+  @@map("_CardToDeck")
+}
+
+model wavenBuildTowavenCompanion {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenBuildTowavenCompanion_AB_unique")
+  @@index([B], map: "_wavenBuildTowavenCompanion_B_index")
+  @@map("_wavenBuildTowavenCompanion")
+}
+
+model wavenBuildTowavenItem {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenBuildTowavenItem_AB_unique")
+  @@index([B], map: "_wavenBuildTowavenItem_B_index")
+  @@map("_wavenBuildTowavenItem")
+}
+
+model wavenBuildTowavenPassive {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenBuildTowavenPassive_AB_unique")
+  @@index([B], map: "_wavenBuildTowavenPassive_B_index")
+  @@map("_wavenBuildTowavenPassive")
+}
+
+model wavenBuildTowavenSpell {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenBuildTowavenSpell_AB_unique")
+  @@index([B], map: "_wavenBuildTowavenSpell_B_index")
+  @@map("_wavenBuildTowavenSpell")
+}
+
+model wavenCampanionImprovementTowavenCompanion {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenCampanionImprovementTowavenCompanion_AB_unique")
+  @@index([B], map: "_wavenCampanionImprovementTowavenCompanion_B_index")
+  @@map("_wavenCampanionImprovementTowavenCompanion")
+}
+
+model wavenCampanionPassiveTowavenCompanion {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenCampanionPassiveTowavenCompanion_AB_unique")
+  @@index([B], map: "_wavenCampanionPassiveTowavenCompanion_B_index")
+  @@map("_wavenCampanionPassiveTowavenCompanion")
+}
+
+model wavenClassTowavenSpell {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenClassTowavenSpell_AB_unique")
+  @@index([B], map: "_wavenClassTowavenSpell_B_index")
+  @@map("_wavenClassTowavenSpell")
+}
+
+model wavenCompanionTowavenType {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenCompanionTowavenType_AB_unique")
+  @@index([B], map: "_wavenCompanionTowavenType_B_index")
+  @@map("_wavenCompanionTowavenType")
+}
+
+model wavenItemTowavenItemImprovement {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenItemTowavenItemImprovement_AB_unique")
+  @@index([B], map: "_wavenItemTowavenItemImprovement_B_index")
+  @@map("_wavenItemTowavenItemImprovement")
+}
+
+model wavenItemTowavenItemPassive {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenItemTowavenItemPassive_AB_unique")
+  @@index([B], map: "_wavenItemTowavenItemPassive_B_index")
+  @@map("_wavenItemTowavenItemPassive")
+}
+
+model wavenSpellTowavenSpellImprovement {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_wavenSpellTowavenSpellImprovement_AB_unique")
+  @@index([B], map: "_wavenSpellTowavenSpellImprovement_B_index")
+  @@map("_wavenSpellTowavenSpellImprovement")
+}
+
+model lorcanaCard {
+  id              String  @id
+  dreambornId     String  @unique
+  setId           String
+  name            String
+  title           String?
+  setNumber       Int
+  cost            Int
+  type            String
+  colors          Json
+  ink             Boolean
+  characteristics Json
+  strength        Int?
+  willpower       Int?
+  lore            Int?
+  rarity          String
+  abilities       Json?
+  artist          String?
+  body_text       String? @db.Text
+  image_urls      Json?
+}
+
+model lorcanaCardDeck {
+  quantity      Int
+  lorcanaCardId String
+  lorcanaDeckId String
+
+  @@id([lorcanaCardId, lorcanaDeckId])
+  @@index([lorcanaCardId])
+  @@index([lorcanaDeckId])
+}
+
+model lorcanaCollection {
+  quantity Int
+  userId   String
+  cardId   String
+
+  @@id([cardId, userId])
+  @@index([cardId])
+  @@index([userId])
+}
+
+model lorcanaDeck {
+  id     String @id
+  name   String
+  userId String
+
+  @@index([userId])
+}
+
+model wavenBuild {
+  id       Int    @id @default(autoincrement())
+  name     String
+  weaponId Int
+  lifeStat Json
+  atkStat  Json
+
+  @@index([weaponId])
+}
+
+model wavenCampanionImprovement {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String @db.Text
+  art         String
+  cost        Int
+}
+
+model wavenCampanionPassive {
+  id      Int    @id @default(autoincrement())
+  ability String @db.Text
+}
+
+model wavenClass {
+  id          Int     @id @default(autoincrement())
+  name        String
+  wavenGodId  Int
+  art         String?
+  difficulty  Int?
+  life        Int
+  attack      Int
+  critical    Int
+  mvmt        Int
+  mainPassive String  @db.Text
+
+  @@index([wavenGodId])
+}
+
+model wavenCompanion {
+  id       Int     @id @default(autoincrement())
+  name     String
+  rarity   String
+  ability  String  @db.Text
+  family   String?
+  cost     String
+  art      String?
+  life     Int
+  attack   Int
+  critical Int
+  mvmt     Int
+}
+
+model wavenGod {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String? @db.Text
+  art         String?
+  release     Boolean @default(true)
+}
+
+model wavenItem {
+  id      Int     @id @default(autoincrement())
+  name    String
+  type    String
+  rarity  String
+  ability String  @db.Text
+  art     String?
+}
+
+model wavenItemImprovement {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  type        String
+  description String  @db.Text
+  art         String
+  cost        Int
+}
+
+model wavenItemPassive {
+  id      Int    @id @default(autoincrement())
+  ability String @db.Text
+}
+
+model wavenPassive {
+  id           Int    @id @default(autoincrement())
+  name         String
+  description  String @db.Text
+  art          String
+  wavenClassId Int?
+
+  @@index([wavenClassId])
+}
+
+model wavenSpell {
+  id                Int    @id @default(autoincrement())
+  name              String
+  ability           String @db.Text
+  cost              Int
+  art               String
+  gaugeReward       Int
+  gaugeRewardType   String
+  actionPointReward Int
+  godId             Int
+  wavenTypeId       Int?
+
+  @@index([godId])
+  @@index([wavenTypeId])
+}
+
+model wavenSpellImprovement {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String @db.Text
+  art         String
+  cost        Int
+}
+
+model wavenType {
+  id   Int    @id @default(autoincrement())
+  name String
+}
