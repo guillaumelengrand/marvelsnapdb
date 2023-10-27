@@ -358,3 +358,13 @@ model wavenType {
   id   Int    @id @default(autoincrement())
   name String
 }
+
+model lorcanaSet {
+  id          String  @id @unique
+  name        String  @unique
+  code        String  @unique
+  card_count  Int     @default(0)
+  icon        String?
+  released_at String  @default("1970-01-01")
+  set_type    String?
+}
