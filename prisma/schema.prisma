@@ -9,14 +9,14 @@ datasource db {
 }
 
 model Card {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   type        String?
   cost        Int?
   power       Int?
   ability     String?
   flavor      String?
-  carddefid   String  @unique
+  carddefid   String    @unique
   source      String?
   source_slug String?
   status      String?
@@ -26,11 +26,14 @@ model Card {
   colorist    String?
   releaseDate Int?
   tags        Json
+  variants    Variant[]
+  decks       Deck[]
 }
 
 model Deck {
-  id   Int    @id @default(autoincrement())
-  name String
+  id    Int    @id @default(autoincrement())
+  name  String
+  cards Card[]
 }
 
 model Location {
@@ -75,6 +78,7 @@ model Variant {
   full_description String?
   ReleaseDate      Int?
   tags             Json
+  card             Card    @relation(fields: [cid], references: [id])
 
   @@index([cid])
 }
