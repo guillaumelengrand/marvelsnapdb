@@ -15,6 +15,7 @@ export default function Header() {
                 <Link href={'/cards'}>Cards</Link>
                 <Link href={'/locations'}>Location</Link>
                 <Link href={'/decks'}>Deck</Link>
+                <Link href={'/decks/create'}>Deck Builder</Link>
                 {session && (
                     <div className="flex flex-row gap-2 font-bold">
                         <Link href={'/admin'}>Admin</Link>

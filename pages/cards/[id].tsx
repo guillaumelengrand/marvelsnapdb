@@ -15,22 +15,23 @@ export default function Cards({data}: CardsPageProps) {
         <div className="flex flex-col gap-2 px-2">
             <header></header>
             <main className="flex flex-col gap-1">
-                {data && (
-                    <>
-                        <div>
-                            <CardModal card={data} />
-                            <div>{data.name}</div>
-                        </div>
-                        <div className="flex flex-wrap">
-                            {data.variants &&
-                                data.variants.map((variant: Variant) => (
-                                    <div key={variant.id} className="w-1/5 p-1">
-                                        <VariantModal card={data} variant={variant} />
-                                    </div>
-                                ))}
-                        </div>
-                    </>
-                )}
+                <div className="flex flex-row gap-1">
+                    <CardModal card={data} />
+                    <div>
+                        <div>{data.name}</div>
+                        <div>{data.cost}</div>
+                        <div>{data.power}</div>
+                        <div>{data.ability}</div>
+                    </div>
+                </div>
+                <div className="flex flex-wrap">
+                    {data.variants &&
+                        data.variants.map((variant: Variant) => (
+                            <div key={variant.id} className="w-1/5 p-1">
+                                <VariantModal card={data} variant={variant} />
+                            </div>
+                        ))}
+                </div>
             </main>
             <footer></footer>
         </div>
@@ -106,6 +107,7 @@ let VariantModal = ({card, variant}: VariantModalProps) => {
                             {tag.tag}
                         </div>
                     ))}
+                <div className="bg-blue-600 rounded-xl px-2">{variant.status}</div>
             </div>
             <Modal
                 size="3xl"
@@ -147,6 +149,12 @@ export const getServerSideProps: GetServerSideProps<{data: Card}> = async contex
         let parseId = parseInt(id);
         if (parseId) data = await getCard(parseInt(id));
         console.log('🚀 ~ file: [id].tsx:56 ~ data:', data);
+    }
+
+    if (!data) {
+        return {
+            notFound: true,
+        };
     }
     return {
         props: {

@@ -1,8 +1,10 @@
-import {ReactNode, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import IconArrowDownUp from './icons/arrowDownUp';
 import {Card} from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import {useRouter} from 'next/router';
+import {fetchWrapper} from '@/lib/utils';
 
 interface CardListProps {
     cards: Card[];
@@ -10,17 +12,54 @@ interface CardListProps {
 }
 
 export default function CardList({cards, addCardToDeck}: CardListProps) {
+    const router = useRouter();
+    const [cardsDisplay, setCardsDisplay] = useState(cards);
     const [searchValue, setSearchValue] = useState('');
 
     const [viewStyle, setViewStyle] = useState('w-1/6');
+
+    useEffect(() => {
+        console.log({query: router.query});
+
+        let fetchData = async () => {
+            console.log('fetcj');
+
+            let res = await fetchWrapper('/api/cards', router.query, 'POST');
+            let data = await res.json();
+            console.log({data});
+
+            setCardsDisplay(data);
+        };
+        fetchData();
+    }, [router.query]);
+    useEffect(() => {
+        let fetchData = async () => {
+            console.log('fetch');
+
+            let res = await fetchWrapper('/api/cards', {...router.query, searchValue}, 'POST');
+            let data = await res.json();
+            console.log({data});
+
+            setCardsDisplay(data);
+        };
+        fetchData();
+    }, [searchValue]);
     return (
         <>
             <div className="flex flex-row">
                 <div className="flex flex-row gap-1 border-r-1 border-blue-950 pr-1">
-                    <select className="bg-blue-950">
-                        <option>Nom</option>
-                        <option>Energie</option>
-                        <option>Puissance</option>
+                    <select
+                        className="bg-blue-950"
+                        onChange={e => {
+                            e.preventDefault();
+                            let val = e.target.value;
+                            router.push(`?order=${val}`, `?order=${val}`, {shallow: true});
+                        }}
+                        defaultValue={router.query.order ? router.query.order : 'name'}
+                    >
+                        <option value={'name'}>Nom</option>
+                        <option value={'cost'}>Energie</option>
+                        <option value={'power'}>Puissance</option>
                     </select>
                     <button className="border rounded border-blue-950 px-1">
                         <IconArrowDownUp />
@@ -75,27 +114,8 @@ export default function CardList({cards, addCardToDeck}: CardListProps) {
                 </div>
             </div>
             <div className="flex flex-wrap">
-                {cards.map(card => (
+                {cardsDisplay.map(card => (
                     <>
-                        {/* <div
-                        key={card.id}
-                        className={`${viewStyle} p-1`}
-                        onClick={() => {
-                            if (addCardToDeck) {
-                                addCardToDeck(card);
-                            }
-                        }}
-                    >
-                        <div className={`group flex flex-col gap-1 items-center relative`}>
-                            <Image width={200} height={400} src={card.art ? card.art : ''} alt={card.name} />
-                            <div className="absolute hidden bottom-0 group-hover:block">
-                                <div className="flex flex-col gap-1 mx-2 bg-white rounded-md px-2 py-1 text-black">
-                                    <div className="font-bold text-center">{card.name}</div>
-                                    <div className="text-xs">{card.ability}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>*/}
                         <CardLayout
                             card={card}
                             addCardToDeck={addCardToDeck}

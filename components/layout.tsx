@@ -17,7 +17,7 @@ export default function Layout({children, pageName = 'Lorcana DB'}: LayoutProps)
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header />
-            <div className="pt-[10vh]">{children}</div>
+            <div className="pt-[10vh] min-h-[100vh]">{children}</div>
         </>
     );
 }

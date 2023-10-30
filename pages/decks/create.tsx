@@ -1,6 +1,6 @@
 import {Card, Deck, Prisma} from '@prisma/client';
 import {GetServerSideProps} from 'next';
-import {getCards} from '@/models/card';
+import {getCards, getCardsReleased} from '@/models/card';
 import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import {fetchWrapper} from '@/lib/utils';
@@ -14,9 +14,10 @@ import CardList from '@/components/cardList';
 
 interface CreateDeckPageProps {
     cards: Card[];
+    params: {};
 }
 
-export default function CreateDeck({cards}: CreateDeckPageProps) {
+export default function CreateDeck({cards, params}: CreateDeckPageProps) {
     const router = useRouter();
 
     const [deck, setDeck] = useState<Prisma.DeckGetPayload<{include: {cards: true}}>>({
@@ -140,86 +141,6 @@ export default function CreateDeck({cards}: CreateDeckPageProps) {
                 {/** List Card Selector */}
                 <div className="flex flex-col gap-1 w-2/3 py-2 ml-2 overflow-auto h-[90vh]">
                     <CardList cards={cards} addCardToDeck={addCardToDeck} />
-                    {/* <div className="flex flex-row">
-                        <div className="flex flex-row gap-1 border-r-1 border-blue-950 pr-1">
-                            <select className="bg-blue-950">
-                                <option>Nom</option>
-                                <option>Energie</option>
-                                <option>Puissance</option>
-                            </select>
-                            <button className="border rounded border-blue-950 px-1">
-                                <IconArrowDownUp />
-                            </button>
-                            <input
-                                type="text"
-                                value={searchValue}
-                                onChange={e => setSearchValue(e.target.value)}
-                                className="bg-blue-950 px-1"
-                                placeholder="Recherche..."
-                            />
-                            <select className="bg-blue-950">
-                                <option>Selectionner une capacité</option>
-                                <option>Révélée</option>
-                                <option>Continu</option>
-                                <option>Sans Effet</option>
-                                <option>Défausse</option>
-                                <option>Déplace</option>
-                                <option>Détruit</option>
-                            </select>
-
-                            <button
-                                className="border border-black rounded-full text-xs px-1"
-                                onClick={() => setViewStyle('')}
-                            >
-                                0-1
-                            </button>
-                            <button className="border border-black rounded-full px-2" onClick={() => {}}>
-                                2
-                            </button>
-                            <button className="border border-black rounded-full px-2" onClick={() => {}}>
-                                3
-                            </button>
-                            <button className="border border-black rounded-full px-2" onClick={() => {}}>
-                                4
-                            </button>
-                            <button className="border border-black rounded-full px-2" onClick={() => {}}>
-                                5
-                            </button>
-                            <button className="border border-black rounded-full px-1" onClick={() => {}}>
-                                6+
-                            </button>
-                        </div>
-
-                        <div className="flex flex-row gap-1 pl-1">
-                            <button
-                                className="border border-black rounded-full px-2"
-                                onClick={() => setViewStyle('w-1/4')}
-                            >
-                                4
-                            </button>
-                            <button
-                                className="border border-black rounded-full px-2"
-                                onClick={() => setViewStyle('w-1/6')}
-                            >
-                                6
-                            </button>
-                            <button
-                                className="border border-black rounded-full px-1"
-                                onClick={() => setViewStyle('w-[12.5%]')}
-                            >
-                                10
-                            </button>
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap">
-                        {cards.map(card => (
-                            <div key={card.id} className={`${viewStyle} p-1`} onClick={() => addCardToDeck(card)}>
-                                <div className={`flex flex-col gap-1 items-center`}>
-                                    <Image width={200} height={400} src={card.art ? card.art : ''} alt={card.name} />
-                                </div>
-                            </div>
-                        ))}
-                    </div> */}
                 </div>
             </div>
         </main>
@@ -230,11 +151,16 @@ export const getServerSideProps: GetServerSideProps<CreateDeckPageProps> = async
     // fetching data here
     // Return the data as props
 
-    let cards = await getCards();
+    let params = context.query;
+
+    console.log({params});
+
+    let cards = await getCardsReleased(params);
     return {
         props: {
             pageName: `Create Deck`,
             cards,
+            params,
         },
     };
 };

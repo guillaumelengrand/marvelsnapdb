@@ -7,6 +7,33 @@ export async function getCards() {
     return JSON.parse(JSON.stringify(res));
 }
 
+export async function getCardsReleased(params: any) {
+    let query: any = {
+        where: {
+            AND: [{source_slug: {not: 'not-available'}}, {source_slug: {not: 'none'}}],
+            // source_slug: {not: 'none'},
+        },
+    };
+    if (params?.order === 'cost') {
+        query.orderBy = {cost: 'asc'};
+    } else if (params?.order === 'name') {
+        query.orderBy = {name: 'asc'};
+    } else if (params?.order === 'power') {
+        query.orderBy = {power: 'asc'};
+    }
+
+    if (params.searchValue) {
+        query.where = {
+            name: {
+                contains: params.searchValue,
+            },
+        };
+    }
+    let res = await prisma.card.findMany(query);
+
+    return JSON.parse(JSON.stringify(res));
+}
+
 export async function getCard(id: number) {
     // console.log('🚀 ~ file: card.ts:12 ~ getCard ~ id:', id);
     try {

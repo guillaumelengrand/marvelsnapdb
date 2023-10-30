@@ -8,7 +8,7 @@ export default function App({Component, pageProps: {session, ...pageProps}}: App
     return (
         <SessionProvider session={session}>
             <NextUIProvider>
-                <Layout>
+                <Layout pageName={pageProps.pageName ? pageProps.pageName : 'Marvel Snap DB'}>
                     <Component {...pageProps} />
                 </Layout>
             </NextUIProvider>

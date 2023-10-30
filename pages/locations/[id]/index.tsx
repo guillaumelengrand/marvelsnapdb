@@ -11,21 +11,21 @@ interface LocationPageProps {
 
 export default function Location({location: location}: LocationPageProps) {
     return (
-        <main>
+        <main className="min-h-[90vh] p-4">
             {location ? (
-                <>
-                    <h1>{location.name}</h1>
+                <div className="flex flex-col gap-2 items-center">
+                    <h1 className="text-3xl font-bold">{location.name}</h1>
 
-                    <div className="flex flex-col gap-1 items-center">
-                        <div className="flex flex-wrap w-1/2">
-                            {location && (
-                                <div>
-                                    <div>{location.ability}</div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </>
+                    <Image
+                        width={400}
+                        height={400}
+                        src={location.art ? location.art : ''}
+                        alt={location.name}
+                        className="w-[60vh]"
+                    />
+
+                    <div>{location.ability}</div>
+                </div>
             ) : (
                 <>
                     <h1>Location Not Founded</h1>
